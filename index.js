@@ -1,15 +1,20 @@
 const express = require('express');
-import userRoutes from './routes/userRoutes';
+const dotenv = require('dotenv');
+const userRoutes = require('./routes/userRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+
+const connectDb = require('./config/db');
+
+dotenv.config();
+
+connectDb();
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/', (req, res) => {
-	res.json('hello');
-});
-
 app.use('/api/users', userRoutes);
+app.use('/api/projects', projectRoutes);
 
 const PORT = process.env.PORT || 5000;
 

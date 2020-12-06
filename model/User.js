@@ -1,12 +1,11 @@
-import React from 'react';
-import mongoose from 'mongoose';
-import Project from './Project';
+const mongoose = require('mongoose');
+const Project = require('./Project');
 
 const userSchema = mongoose.Schema({
 	name: {
 		type: String,
 	},
-	projects: [Project],
+	projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
 });
 
-export default User = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);
