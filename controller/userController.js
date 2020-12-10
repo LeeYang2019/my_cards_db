@@ -1,4 +1,5 @@
 const User = require('../model/User');
+const mongoose = require('mongoose');
 const Project = require('../model/Project');
 
 // @desc    GET all users
@@ -6,7 +7,7 @@ const Project = require('../model/Project');
 // @access  Private
 exports.getUsers = async (req, res) => {
 	const users = await User.find({});
-	res.json(users);
+	res.json({ success: true, length: users.length, data: users });
 };
 
 // @desc    GET a user
@@ -14,7 +15,7 @@ exports.getUsers = async (req, res) => {
 // @access  Private
 exports.getUser = async (req, res) => {
 	const user = await User.findById(req.params.id).populate(
-		'project',
+		'projects',
 		'projectName'
 	);
 	res.json(user);
@@ -41,32 +42,19 @@ exports.updateUser = async (req, res) => {
 // @route   DELETE /api/users/:id
 // @access  Private
 exports.deleteUser = async (req, res) => {
-	const user = await User.findByIdAndDelete(req.params.id);
-	res.json({ success: true });
-};
-
-// @desc    assigns user to project
-// @route   PUT /api/users/:userId/projects/:projectId
-exports.assignUserToProject = async (req, res) => {
-	const project = await Project.findById(req.params.projectId);
 	const user = await User.findById(req.params.id);
 
-	console.log(project._id);
-	console.log(user._id);
+	const updatedProjects = await Project.find({
+		users: mongoose.Types.ObjectId(req.params.id),
+	});
 
-	//check if exist
-	if (user || project) {
-		if (
-			user.projects.length > 0 &&
-			user.projects.filter((project) => project._id === req.params.projectId)
-		)
-			project.users.push(user._id);
-		user.projects.push(project._id);
+	updatedProjects.forEach(async (project) => {
+		const { users } = project;
+		const index = users.indexOf(req.params.id);
+		users.splice(index, 1);
 		await project.save();
-		await user.save();
-		res.json({ success: true });
-	} else {
-		res.status(401);
-		throw new Error('No Resources Found');
-	}
+	});
+
+	await user.remove();
+	res.json({ success: true });
 };

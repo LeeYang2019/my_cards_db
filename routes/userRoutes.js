@@ -7,11 +7,17 @@ const {
 	addUser,
 	updateUser,
 	deleteUser,
-	assignUserToProject,
 } = require('../controller/userController');
+
+const {
+	assignUserToProject,
+	unassignUserFromProject,
+} = require('../controller/assignmentController');
 
 router.route('/').get(getUsers).post(addUser);
 router.route('/:id').get(getUser).put(updateUser).delete(deleteUser);
-router.route('/:id/projects/:projectId').put(assignUserToProject);
+
+router.route('/:id/projects/:projectId/assign').put(assignUserToProject);
+router.route('/:id/projects/:projectId/remove').put(unassignUserFromProject);
 
 module.exports = router;
