@@ -1,0 +1,66 @@
+// more complicated logic...
+	// if organization exists, need to find something else
+	//	
+	// what if, in this logic, you did something funky like 
+	// you tried iterating on an undefined property...
+	// example: let x= undefined
+	//	x.forEach(item => item * item); // what happens? does this throw a 401
+	//
+	// what if organization's data is corrupted in the case where you're using an output adapter
+
+	/*
+
+		user expects organization to have property: name, location, etc...erro (all 3 required on body)
+		for some reason the data is corroupted where only 1 propety exists...
+
+		let result = await Joi.validate(schema, organization);
+		// an error is going to occur, what do you return to the user? do you return 401 or a 200?
+		// if return 200, clients will craash because they expect 3 properties
+		but do you return 401?
+
+		In those cases you return a 500... 
+	 */
+	//
+
+	try {
+		//throw 401
+		if (!organizations) {
+			throw new Error('No resources found');
+		}
+
+} catch (error) {
+		if (error.message === 'No resources found') {
+			res.status(401);
+			throw new Error(error.message);
+		}
+
+		res.status(500);
+		throw new Error('Internal Error Server');
+		//throw 500
+	}
+
+	// we use Joi... Hapi-joi
+	// for input adapter
+	/*
+		let schemaV1 = Joi.Object.keys({
+			name: Joi.String().min().max().required(),
+			owner: Joi.String().min().max().required(),
+			startDate: Joi.String().min().max().required()
+		})
+
+		let schemaV2 = Joi.Object.keys({
+			firstName: Joi.String().min().max().required(),
+			owner: Joi.String().min().max().required(),
+			startDate: Joi.String().min().max().required(),
+			location: Joi.String().min().max().optional()
+		})
+
+		let schema = undefined;
+		if(req.body.apiVersion === "v1") schema = schemaV1;
+		else schema = schemaV2;
+
+		let result = await Joi.validate(req.body, schema);
+		if(result.error) {
+			res.status(400).send(result.error);
+		}
+	 */

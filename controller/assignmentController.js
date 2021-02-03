@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../model/User');
 const Project = require('../model/Project');
+const { update } = require('../model/User');
 
 // @desc    assigns user to project
 // @route   PUT /api/users/:id/projects/:projectId/assign
@@ -22,10 +23,12 @@ exports.assignUserToProject = async (req, res) => {
 			await user.save();
 			await project.save();
 			res.status(200).json({ success: true });
+		}
 
-			//if user project length > 0
-		} else if (user.projects.length > 0 && project.users.length > 0) {
+		//if user project length > 0
+		if (user.projects.length > 0 && project.users.length > 0) {
 			console.log('both user projects and project users are not empty');
+
 			if (
 				!user.projects.includes(projectId) &&
 				!project.users.includes(userId)
@@ -58,8 +61,11 @@ exports.unassignUserFromProject = async (req, res) => {
 		users: mongoose.Types.ObjectId(req.params.id),
 	});
 
-	console.log(user);
-	console.log(updatedProjects);
+	const { projects } = updateUser;
+	projArr = Array.from(projects);
+	projArr.forEach((element) => {
+		console.log(element);
+	});
 
 	res.status(200).json({ success: true });
 };

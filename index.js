@@ -13,8 +13,8 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/api/users', userRoutes);
-app.use('/api/projects', projectRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/projects', projectRoutes);
 
 const PORT = process.env.PORT || 5000;
 

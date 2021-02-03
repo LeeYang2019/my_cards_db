@@ -6,7 +6,7 @@ const User = require('../model/User');
 // @route   GET /api/projects
 // @access  Private
 exports.getProjects = async (req, res) => {
-	const projects = await Project.find({});
+	const projects = await Project.find({}).populate('users', 'name');
 	res.json({ success: true, length: projects.length, data: projects });
 };
 

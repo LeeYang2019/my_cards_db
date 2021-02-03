@@ -1,0 +1,2 @@
+// v1.1.0
+app.use('/api/v1/', require('./routes/v1/index'));
