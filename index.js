@@ -16,6 +16,7 @@ app.use(express.json());
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/projects', projectRoutes);
 
+// host sets environment variable or local port 5000
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, console.log(`listening to port ${PORT}`));
